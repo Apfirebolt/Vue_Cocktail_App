@@ -14,6 +14,22 @@ const routes = [
         component: () => import('../views/Cocktail.vue')
     },
     {
+        path: '/ingredients',
+        name: 'Ingredient',
+        component: () => import('../views/Ingredient.vue')
+    },
+    {
+        path: '/categories',
+        name: 'Category',
+        component: () => import('../views/Category.vue')
+    },
+    {
+        path: '/glasses',
+        name: 'Glass',
+        component: () => import('../views/Glass.vue')
+    },
+    
+    {
         path: '/:catchAll(.*)',
         name: 'NotFound',
         component: NotFound

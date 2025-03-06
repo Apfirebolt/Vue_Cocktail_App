@@ -3,9 +3,15 @@
         <div class="bg-white p-8 rounded-lg shadow-lg">
             <h1 class="text-2xl font-bold mb-4">Welcome to Cocktails Page</h1>
             <p class="text-gray-700 mb-4">This is a basic page using Tailwind CSS and Vue 3 with TypeScript.</p>
+            <div class="grid grid-cols-12 gap-2 mb-4">
+                <input type="text" placeholder="Search ingredients..." class="col-span-8 p-2 border rounded"
+                    v-model="searchQuery">
+                <button class="col-span-2 bg-blue-500 text-white p-2 rounded" @click="searchCocktails">Search</button>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div v-for="cocktail in cocktails" :key="cocktail.idDrink" class="bg-gray-200 p-4 rounded-lg shadow">
-                    <img :src="cocktail.strDrinkThumb" :alt="cocktail.strDrink" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <img :src="cocktail.strDrinkThumb" :alt="cocktail.strDrink"
+                        class="w-full h-48 object-cover rounded-lg mb-4">
                     <h2 class="text-xl font-bold">{{ cocktail.strDrink }}</h2>
                     <p class="text-gray-700">{{ cocktail.strInstructions }}</p>
                 </div>
@@ -25,6 +31,12 @@ interface Cocktail {
 }
 
 const cocktails = ref<Cocktail[]>([]);
+const searchQuery = ref<string>('');
+
+const searchCocktails = async () => {
+    const { data } = await httpClient.get<{ drinks: Cocktail[] }>(`1/search.php?s=${searchQuery.value}`);
+    cocktails.value = data.drinks;
+};
 
 onMounted(async () => {
     const { data } = await httpClient.get<{ drinks: Cocktail[] }>('1/search.php?s=margarita');
@@ -34,5 +46,4 @@ onMounted(async () => {
 
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -68,7 +68,10 @@ const isScrolledDown = ref<boolean>(false);
 const links: Link[] = [
   { name: 'Home', href: '/' },
   { name: 'About', href: '/about' },
-  { name: 'Cocktails', href: '/cocktails' }
+  { name: 'Cocktails', href: '/cocktails' },
+  { name: 'Ingredients', href: '/ingredients' },
+  { name: 'Categories', href: '/categories' },
+  { name: 'Glasses', href: '/glasses' },
 ];
 
 const setDarkMode = (value: boolean): void => {
