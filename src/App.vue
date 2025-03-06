@@ -1,6 +1,6 @@
 
 <template>
-  <div class="bg-secondary-300">
+  <div class="dark:bg-primary-100 bg-secondary-300">
     <HeaderComponent />
     <main class="mt-16">
       <router-view />

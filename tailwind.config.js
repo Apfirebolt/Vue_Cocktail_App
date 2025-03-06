@@ -7,17 +7,16 @@ export default {
       colors: {
         //If you want to keep the primary color you had, you can
         primary: {
-          100: "#5B85AA",
-          200: "#171123",
-          300: "#414770",
+          100: "#27391C",
+          200: "#255F38",
+          300: "#1F7D53",
         },
         //If you want to keep the secondary color you had, you can.
         secondary: {
-          100: "#4C191B",
-          200: "#963D5A",
-          300: "#ECFFF8",
+          100: "#C7D9DD",
+          200: "#D5E5D5",
+          300: "#EEF1DA",
         },
-
       },
     },
   },

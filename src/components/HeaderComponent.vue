@@ -1,5 +1,5 @@
 <template>
-  <Disclosure :class="['border-b-4 border-b-orange-500 lg:py-2 fixed top-0 z-20 w-full transition-all duration-300', isScrolledDown ? 'bg-primary-300 dark:bg-slate-800' : 'bg-primary-200 dark:bg-slate-700 dark:text-white']" as="nav" v-slot="{ open }">
+  <Disclosure :class="['border-b-4 border-b-secondary-300 lg:py-2 fixed top-0 z-20 w-full transition-all duration-300', isScrolledDown ? 'bg-primary-300 dark:bg-slate-800' : 'bg-primary-200 dark:bg-slate-700 dark:text-white']" as="nav" v-slot="{ open }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center h-16">
         <div class="flex items-center w-full justify-between">

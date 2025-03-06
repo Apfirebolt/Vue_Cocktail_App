@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center items-center h-full px-4 py-6">
-    <div class="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-64 w-64"></div>
+    <div class="loader ease-linear rounded-full border-8 border-t-8 border-secondary-200 h-64 w-64"></div>
   </div>
 </template>
 
@@ -10,7 +10,7 @@
 
 <style>
 .loader {
-  border-top-color: #5B85AA;
+  border-top-color: #27391C;
   -webkit-animation: spinner 1.5s linear infinite;
   animation: spinner 1.5s linear infinite;
 }
