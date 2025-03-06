@@ -13,7 +13,3 @@ import { computed } from 'vue'
 
 const currentYear = computed(() => new Date().getFullYear())
 </script>
-
-<style>
-/* Add any custom styles here */
-</style>

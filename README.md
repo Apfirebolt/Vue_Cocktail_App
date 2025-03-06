@@ -60,3 +60,9 @@ This screenshot shows the detail of the cocktail page. On the details page, you'
 This shows results of cocktails fetched when search is performed based on the cocktail name. The result is displayed in tabular form using vue-tailwind tables.
 
 ![alt text](./screenshots/cocktail_list.png)
+
+## Writing tests
+
+After struggling to configure jest, vitest came to rescue. I referred to this video on Youtube https://www.youtube.com/watch?v=iNl6TA29hBM
+
+I was able to write basis tests for Header and Footer components.
