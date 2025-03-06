@@ -1,169 +1,38 @@
 <template>
-  <div class="container p-2">
-    <p class="text-center text-indigo-400 font-semibold my-3 text-lg">
-      Search your favorite cocktails by name, filter them by category, they're alcoholic or non-alcoholic and what glass is used to
-      serve it.
-    </p>
-    <div class="flex w-3/4 mx-auto my-2">
-      <t-input-group class="w-3/4">
-        <t-input v-model="search" placeholder="Search Cocktail By Name here" type="text" name="search" class="w-100" />
-      </t-input-group>
-      <t-button class="ml-3 w-1/4" @click.prevent="getCocktails">
-        Search Cocktail By Name
-      </t-button>
-    </div>
-    <div class="flex w-3/4 mx-auto my-3">
-      <t-input-group class="w-3/4">
-        <t-select v-model="selectedCategory"
-                  :options="categories"
-                  value-attribute="strCategory"
-                  text-attribute="strCategory"
-                  class="w-100"
-        />
-      </t-input-group>
-      <t-button class="ml-3 w-1/4" @click.prevent="filterByCategory">
-        Search Cocktail By Category
-      </t-button>
-    </div>
-    <div class="flex w-3/4 mx-auto my-3">
-      <t-input-group class="w-3/4">
-        <t-select v-model="selectedGlass"
-                  :options="glasses"
-                  value-attribute="strGlass"
-                  text-attribute="strGlass"
-                  class="w-100"
-        />
-      </t-input-group>
-      <t-button class="ml-3 w-1/4" @click.prevent="filterByGlass">
-        Search Cocktail By Glass
-      </t-button>
-    </div>
-    <div class="flex w-3/4 mx-auto my-3">
-      <t-input-group class="w-3/4">
-        <t-select v-model="selectedIngredient"
-                  :options="ingredients"
-                  value-attribute="strIngredient1"
-                  text-attribute="strIngredient1"
-                  class="w-100"
-        />
-      </t-input-group>
-      <t-button class="ml-3 w-1/4" @click.prevent="filterByIngredient">
-        Search Cocktail By Ingredients
-      </t-button>
-    </div>
-    <div v-if="cocktails" class="w-3/4 mx-auto my-3">
-      <t-button class="mx-auto my-3" @click="clearSearchResults">
-        Clear Search Results
-      </t-button>
-      <cocktail-list-table :cocktails="cocktails" />
-    </div>
-    <p v-if="!cocktails && isDataLoaded" class="text-red-400 text-lg my-3 text-center font-semibold">
-      No cocktails found.
-    </p>
-    <t-modal v-if="filteredResults" ref="namesModal" v-model="isCockTailNamesModalOpened">
-      <cocktail-names-modal :names="filteredResults" />
-      <template slot="header">
-        <h2 class="text-center">
-          Cocktails by {{ cocktailSearchType }}
-        </h2>
-      </template>
-      <template slot="footer">
-        <div class="flex justify-around">
-          <t-button variant="error" type="button" @click="$refs.namesModal.hide()">
-            Cancel
-          </t-button>
+    <div class="min-h-screen flex items-center justify-center bg-gray-100">
+        <div class="bg-white p-8 rounded-lg shadow-lg">
+            <h1 class="text-2xl font-bold mb-4">Welcome to Cocktails Page</h1>
+            <p class="text-gray-700 mb-4">This is a basic page using Tailwind CSS and Vue 3 with TypeScript.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div v-for="cocktail in cocktails" :key="cocktail.idDrink" class="bg-gray-200 p-4 rounded-lg shadow">
+                    <img :src="cocktail.strDrinkThumb" :alt="cocktail.strDrink" class="w-full h-48 object-cover rounded-lg mb-4">
+                    <h2 class="text-xl font-bold">{{ cocktail.strDrink }}</h2>
+                    <p class="text-gray-700">{{ cocktail.strInstructions }}</p>
+                </div>
+            </div>
         </div>
-      </template>
-    </t-modal>
-  </div>
+    </div>
 </template>
 
-<script>
-import CocktailListTable from '../components/cocktails/cocktail-list.vue';
-import CocktailNamesModal from '../components/modals/cocktail-names.vue';
+<script lang="ts" setup>
+import { onMounted, ref } from 'vue';
+import httpClient from '../plugins/interceptor';
 
-export default {
-  name: 'CocktailList',
-  components: {
-    CocktailListTable,
-    CocktailNamesModal,
-  },
-  data() {
-    return {
-      search: '',
-      isDataLoaded: false,
-      cocktails: null,
-      categories: null,
-      glasses: null,
-      ingredients: null,
-      filteredResults: null,
-      selectedGlass: null,
-      selectedIngredient: null,
-      selectedCategory: null,
-      isCockTailListModalOpened: false,
-      isCockTailNamesModalOpened: false,
-      cocktailSearchType: null,
-    };
-  },
-  mounted() {
-    this.getCategories();
-    this.getGlasses();
-    this.getIngredients();
-  },
-  methods: {
-    async getCocktails() {
-      this.isCockTailListModalOpened = true;
-      const cocktailData = await this.$http.get(`json/v1/1/search.php?s=${this.search}`);
-      if (cocktailData) {
-        this.isDataLoaded = true;
-        this.cocktails = cocktailData.drinks;
-      }
-    },
-    async filterByCategory() {
-      const filteredData = await this.$http.get(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${this.selectedCategory}`);
-      this.isCockTailNamesModalOpened = true;
-      this.filteredResults = filteredData.drinks;
-      this.cocktailSearchType = 'Category';
-    },
-    async filterByGlass() {
-      const filteredData = await this.$http.get(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?g=${this.selectedGlass}`);
-      this.isCockTailNamesModalOpened = true;
-      this.filteredResults = filteredData.drinks;
-      this.cocktailSearchType = 'Glass';
-    },
-    async filterByIngredient() {
-      const filteredData = await this.$http.get(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${this.selectedIngredient}`);
-      this.isCockTailNamesModalOpened = true;
-      this.filteredResults = filteredData.drinks;
-      this.cocktailSearchType = 'Ingredients';
-    },
-    async getCategories() {
-      const categoryData = await this.$http.get('json/v1/1/list.php?c=list');
-      if (categoryData) {
-        this.categories = categoryData.drinks;
-        this.selectedCategory = this.categories[0].strCategory;
-      }
-    },
-    async getGlasses() {
-      const glassData = await this.$http.get('json/v1/1/list.php?g=list');
-      if (glassData) {
-        this.glasses = glassData.drinks;
-        this.selectedGlass = this.glasses[0].strGlass;
-      }
-    },
-    async getIngredients() {
-      const ingredientData = await this.$http.get('json/v1/1/list.php?i=list');
-      if (ingredientData) {
-        this.ingredients = ingredientData.drinks;
-        this.selectedIngredient = this.ingredients[0].strIngredient1;
-      }
-    },
-    clearSearchResults() {
-      this.isDataLoaded = false;
-      this.cocktails = null;
-      this.cocktailSearchType = null;
-      this.search = '';
-    },
-  },
-};
+interface Cocktail {
+    idDrink: string;
+    strDrink: string;
+    strDrinkThumb: string;
+}
+
+const cocktails = ref<Cocktail[]>([]);
+
+onMounted(async () => {
+    const { data } = await httpClient.get<{ drinks: Cocktail[] }>('1/search.php?s=margarita');
+    cocktails.value = data.drinks;
+    console.log(cocktails.value);
+});
+
 </script>
+
+<style scoped>
+</style>
