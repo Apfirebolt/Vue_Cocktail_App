@@ -10,16 +10,19 @@ This app would have information related to tons of delicious cocktails around th
 
 * [Vue JS](https://vuejs.org/)
 * [TailwindCSS](https://tailwindcss.com/)
-* [Vue-tailwind](https://www.vue-tailwind.com/)
+* [Headless UI](https://headlessui.dev/)
+* [Docker](https://www.docker.com/)
 
 ## Authors
 
-* **Amit Prafulla (APFirebolt)** - (http://amitprafull.com/)
+* **Amit Prafulla (APFirebolt)** - (https://apgiiit.com/)
+
 ## Project setup
+
 This should be a piece of cake for you if you have worked under npm environment before. Simply initialize an empty project using 'npm init' and then install packages. Simply clone the project and install dependencies.
 ```
 npm install
-npm run serve
+npm run dev
 ```
 ### Compiles and minifies for production
 ```
@@ -41,8 +44,6 @@ https://vue-cocktail-db.herokuapp.com/cocktails/
 
 
 ## Project Screenshots
-
-
 
 Please find some of the screenshots of the application. First screenshot depicts the cocktails page of the application with a search form where you can search cocktails through name, category, glass and ingredients.
 
