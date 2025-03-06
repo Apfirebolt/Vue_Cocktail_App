@@ -22,10 +22,18 @@ interface Glass {
 }
 
 const glasses = ref<Glass[]>([]);
+const loading = ref<boolean>(false);
 
 onMounted(async () => {
-    const { data } = await httpClient.get<{ drinks: Glass[] }>('1/list.php?g=list');
-    glasses.value = data.drinks;
+    try {
+        loading.value = true;
+        const { data } = await httpClient.get<{ drinks: Glass[] }>('1/list.php?g=list');
+        glasses.value = data.drinks;
+    } catch (error) {
+        console.error('Error fetching glasses:', error);
+    } finally {
+        loading.value = false;
+    }
 });
 
 </script>
