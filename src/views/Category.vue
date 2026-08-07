@@ -1,43 +1,129 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center">
-        <div class="bg-white p-8 rounded-lg shadow-lg">
-            <h1 class="text-2xl font-bold mb-4">Welcome to Categories Page</h1>
-            <p class="text-gray-700 mb-4">This is a basic page using Tailwind CSS and Vue 3 with TypeScript.</p>
-            
-            <Loader v-if="loading" />
-            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div v-for="category in categories" :key="category.strCategory" class="bg-gray-200 p-4 rounded-lg shadow">
-                    <h2 class="text-xl font-bold">{{ category.strCategory }}</h2>
-                </div>
-            </div>
+  <div class="min-h-screen bg-slate-900 text-slate-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto space-y-10">
+
+      <!-- Hero Header Section -->
+      <header class="text-center space-y-4 max-w-2xl mx-auto">
+        <span class="text-xs font-semibold tracking-widest text-amber-400 uppercase bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">
+          Curated Collections
+        </span>
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">
+          Cocktail Categories
+        </h1>
+        <p class="text-slate-400 text-base sm:text-lg">
+          Browse drink recipes grouped by style, from ordinary drinks to artisanal shots and punches.
+        </p>
+
+        <!-- Search / Filter Input -->
+        <div class="mt-6 relative max-w-md mx-auto">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </div>
+          <input 
+            v-model="searchQuery"
+            type="text" 
+            placeholder="Filter categories..." 
+            class="w-full pl-10 pr-10 py-3 bg-slate-800/90 border border-slate-700/80 rounded-xl text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all text-sm sm:text-base shadow-inner"
+          />
+          <button 
+            v-if="searchQuery" 
+            @click="searchQuery = ''"
+            class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-200"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
         </div>
+      </header>
+
+      <!-- Loader State -->
+      <div v-if="loading" class="flex justify-center py-20">
+        <Loader />
+      </div>
+
+      <!-- Categories Grid -->
+      <div 
+        v-else-if="filteredCategories.length > 0" 
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
+        <div 
+          v-for="category in filteredCategories" 
+          :key="category.strCategory" 
+          class="group bg-slate-800/60 backdrop-blur-sm border border-slate-700/60 rounded-2xl p-6 shadow-xl hover:border-amber-500/50 hover:bg-slate-800/90 hover:shadow-2xl hover:shadow-amber-500/5 transition-all duration-300 flex items-center justify-between cursor-pointer hover:-translate-y-1"
+        >
+          <div class="flex items-center space-x-4">
+            <!-- Glass Icon Badge -->
+            <div class="w-12 h-12 rounded-xl bg-amber-400/10 border border-amber-400/20 text-amber-400 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-amber-400/20 transition-all duration-300">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+              </svg>
+            </div>
+
+            <div>
+              <h2 class="text-lg font-bold text-slate-100 group-hover:text-amber-400 transition-colors">
+                {{ category.strCategory }}
+              </h2>
+              <p class="text-xs text-slate-400 mt-0.5">Explore drink selection</p>
+            </div>
+          </div>
+
+          <!-- Arrow Action Icon -->
+          <div class="text-slate-500 group-hover:text-amber-400 group-hover:translate-x-1 transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div v-else class="text-center py-16 bg-slate-800/40 border border-slate-700/50 rounded-2xl max-w-md mx-auto">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-slate-700/50 text-slate-400 mb-3">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-slate-200">No categories found</h3>
+        <p class="text-sm text-slate-400 mt-1">Try clearing your search query to see all categories.</p>
+      </div>
+
     </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import Loader from '../components/Loader.vue';
 import httpClient from '../plugins/interceptor';
 
 interface Category {
-    strCategory: string;
+  strCategory: string;
 }
 
 const categories = ref<Category[]>([]);
+const searchQuery = ref<string>('');
 const loading = ref<boolean>(false);
 
-onMounted(async () => {
-    loading.value = true;
-    try {
-        const { data } = await httpClient.get<{ drinks: Category[] }>('1/list.php?c=list');
-        if (data.drinks) {
-            categories.value = data.drinks;
-        }
-    } catch (error) {
-        console.error('Error fetching categories:', error);
-    } finally {
-        loading.value = false;
-    }
+// Client-side instant filter computation
+const filteredCategories = computed(() => {
+  if (!searchQuery.value.trim()) return categories.value;
+  const q = searchQuery.value.toLowerCase().trim();
+  return categories.value.filter(cat => cat.strCategory.toLowerCase().includes(q));
 });
 
+onMounted(async () => {
+  loading.value = true;
+  try {
+    const { data } = await httpClient.get<{ drinks: Category[] | null }>('1/list.php?c=list');
+    categories.value = data.drinks || [];
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    categories.value = [];
+  } finally {
+    loading.value = false;
+  }
+});
 </script>
