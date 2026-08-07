@@ -1,31 +1,71 @@
-/**
- * @vitest-environment happy-dom
- */
-
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import Header from '../components/HeaderComponent.vue';
 
 describe('Header', () => {
-    it('renders a header', () => {
-        const wrapper = mount(Header);
-        expect(wrapper.find('nav').exists()).toBe(true);
+    beforeEach(() => {
+        const storage = {};
+        vi.stubGlobal('localStorage', {
+            getItem: vi.fn((key) => (key in storage ? storage[key] : null)),
+            setItem: vi.fn((key, value) => {
+                storage[key] = String(value);
+            }),
+            removeItem: vi.fn((key) => {
+                delete storage[key];
+            }),
+            clear: vi.fn(() => {
+                Object.keys(storage).forEach((key) => delete storage[key]);
+            }),
+        });
+
+        document.documentElement.classList.remove('dark');
+        vi.spyOn(window, 'matchMedia').mockImplementation(() => ({
+            matches: false,
+            media: '',
+            onchange: null,
+            addListener: vi.fn(),
+            removeListener: vi.fn(),
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
+            dispatchEvent: vi.fn(),
+        }));
     });
 
-    it('renders the correct title', () => {
+    it('renders nav and title', () => {
         const wrapper = mount(Header);
+        expect(wrapper.find('nav').exists()).toBe(true);
         expect(wrapper.text()).toContain('Vue Cocktails');
     });
 
-    it('renders the correct number of links', () => {
+    it('renders all navigation links', () => {
         const wrapper = mount(Header);
-        const links = wrapper.findAll('router-link');
-        expect(links.length).toBe(6);
+
+        expect(wrapper.text()).toContain('Home');
+        expect(wrapper.text()).toContain('About');
+        expect(wrapper.text()).toContain('Cocktails');
+        expect(wrapper.text()).toContain('Ingredients');
+        expect(wrapper.text()).toContain('Categories');
+        expect(wrapper.text()).toContain('Glasses');
     });
 
-    it('renders the dark mode button', () => {
+    it('toggles dark mode and persists in localStorage', async () => {
         const wrapper = mount(Header);
-        const button = wrapper.find('button');
-        expect(button.exists()).toBe(true);
+        const button = wrapper.find('button[aria-label="Toggle dark mode"]');
+
+        await button.trigger('click');
+        expect(document.documentElement.classList.contains('dark')).toBe(true);
+        expect(globalThis.localStorage.getItem('darkMode')).toBe('true');
+
+        await button.trigger('click');
+        expect(document.documentElement.classList.contains('dark')).toBe(false);
+        expect(globalThis.localStorage.getItem('darkMode')).toBe('false');
+    });
+
+    it('uses saved dark mode value on mount', () => {
+        globalThis.localStorage.setItem('darkMode', 'true');
+
+        mount(Header);
+
+        expect(document.documentElement.classList.contains('dark')).toBe(true);
     });
 });
